@@ -17,9 +17,9 @@ func main(){
 	results := make(chan string, 3)
 	var wg sync.WaitGroup
 	fmt.Println("开始下载 3 个文件...")
-	for i := 0; i < 3; i ++{
+	for _, filename := range files {
 		wg.Add(1)
-		go download(files[i], &wg, results)
+		go download(filename, &wg, results)
 	}
 	wg.Wait()
 	close(results)

@@ -15,10 +15,7 @@ func (p Product) TotalValue() float64 {
 }
 
 func (p Product) IsInStock() bool {
-	if p.Stock > 0 {
-		return true
-	}
-	return false
+	return p.Stock > 0
 }
 
 func (p Product) Info() string {
@@ -26,11 +23,11 @@ func (p Product) Info() string {
 	return info
 }
 
-func Restock(p *Product, amount int) {
+func (p *Product) Restock(amount int) {
 	p.Stock = p.Stock + amount
 }
 
-func Sell(p *Product, amount int) (success bool, message string) {
+func (p *Product) Sell(amount int) (success bool, message string) {
 	if p.Stock-amount >= 0 {
 		p.Stock = p.Stock - amount
 		return true, "售卖成功"
@@ -44,15 +41,15 @@ func main() {
 		Price: 89.5,
 		Stock: 10,
 	}
-	result, message := Sell(&p, 5)
+	result, message := p.Sell(5)
 	if result {
 		fmt.Println(message, "剩余库存：", p.Stock)
 	} else {
 		fmt.Println("失败," + message)
 	}
-	Restock(&p, 20)
+	p.Restock(20)
 	fmt.Printf("进货%v本, 当前库存：%v\n", 20, p.Stock)
-	result, message = Sell(&p, 30)
+	result, message = p.Sell(30)
 	if result {
 		fmt.Println(message, "剩余库存：", p.Stock)
 	} else {
