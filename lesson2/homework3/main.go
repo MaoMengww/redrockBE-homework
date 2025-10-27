@@ -24,17 +24,14 @@ func (c *Counter) Value() int{
 }
 
 func main(){
-	var lock sync.Mutex
-	count := 0
-	var counter = Counter{
-		mu: lock,
-		count: count,
-	}
-	for i := 0; i < 100; i++{
-		for i := 0; i < 10; i++{
+	var counter = Counter{}
+	for range 100{
+		go func(){
+			for range 10{
 			go counter.Increment()
 		}
+		}()
 	}
-	fmt.Println("启动一百个协程，每个协程累加10次...")
-	fmt.Println("最终计数：", counter.count)
+	fmt.Println("启动一百个协程,每个协程累加10次...")
+	fmt.Println("最终计数：", counter.Value())
 }

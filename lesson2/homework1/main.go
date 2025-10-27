@@ -8,20 +8,20 @@ type Product struct {
 	Stock int //库存
 }
 
-func TotaValue(p Product) float64 {
+func (p Product) TotalValue() float64 {
 	sum := float64(p.Stock) * p.Price
 	return sum
 
 }
 
-func IsInStock(p Product) bool {
+func (p Product) IsInStock() bool {
 	if p.Stock > 0 {
 		return true
 	}
 	return false
 }
 
-func Info(p Product) string {
+func (p Product) Info() string {
 	info := fmt.Sprintf("商品： %v, 单价: ￥%v, 库存： %v件", p.Name, p.Price, p.Stock)
 	return info
 }
@@ -30,7 +30,7 @@ func Restock(p *Product, amount int) {
 	p.Stock = p.Stock + amount
 }
 
-func Shell(p *Product, amount int) (success bool, message string) {
+func Sell(p *Product, amount int) (success bool, message string) {
 	if p.Stock-amount >= 0 {
 		p.Stock = p.Stock - amount
 		return true, "售卖成功"
@@ -44,7 +44,7 @@ func main() {
 		Price: 89.5,
 		Stock: 10,
 	}
-	result, message := Shell(&p, 5)
+	result, message := Sell(&p, 5)
 	if result {
 		fmt.Println(message, "剩余库存：", p.Stock)
 	} else {
@@ -52,12 +52,12 @@ func main() {
 	}
 	Restock(&p, 20)
 	fmt.Printf("进货%v本, 当前库存：%v\n", 20, p.Stock)
-	result, message = Shell(&p, 30)
+	result, message = Sell(&p, 30)
 	if result {
 		fmt.Println(message, "剩余库存：", p.Stock)
 	} else {
 		fmt.Println("失败," + message)
 	}
-	res := Info(p)
-	fmt.Println(res)
+	res := p.Info()
+	fmt.Printf("%v, 总价：%v", res, p.TotalValue())
 }
